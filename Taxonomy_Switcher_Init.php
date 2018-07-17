@@ -48,13 +48,13 @@ class Taxonomy_Switcher_Init {
 	public function taxonomy_switcher_init() {
 
 		if (
-			! isset( $_GET[ 'taxonomy_switcher' ] )
-			|| 1 != $_GET[ 'taxonomy_switcher' ]
+			! isset( $_GET['taxonomy_switcher'] )
+			|| 1 != $_GET['taxonomy_switcher']
 			|| ! current_user_can( 'install_plugins' )
-			|| ! isset( $_GET[ 'from_tax' ] )
-			|| empty( $_GET[ 'from_tax' ] )
-			|| ! isset( $_GET[ 'to_tax' ] )
-			|| empty( $_GET[ 'to_tax' ] )
+			|| ! isset( $_GET['from_tax'] )
+			|| empty( $_GET['from_tax'] )
+			|| ! isset( $_GET['to_tax'] )
+			|| empty( $_GET['to_tax'] )
 		) {
 			return;
 		}
@@ -82,7 +82,7 @@ class Taxonomy_Switcher_Init {
 	 * @since 1.0.0
 	 */
 	public function do_admin_notice() {
-		echo '<div id="message" class="updated"><p>'. implode( '</p><p>', $this->notices ) .'</p></div>';
+		echo '<div id="message" class="updated"><p>' . implode( '</p><p>', $this->notices ) . '</p></div>';
 		delete_option( 'taxonomy-switcher-notices' );
 	}
 }

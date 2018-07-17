@@ -84,10 +84,12 @@ class Taxonomy_Switcher_UI {
 		$this->admin_title = __( 'Taxonomy Switcher', 'wds' );
 		$this->admin_slug  = 'taxonomy-switcher';
 
-		$this->options_page = add_management_page( $this->admin_title, $this->admin_title, 'manage_options', $this->admin_slug, array(
-			$this,
-			'do_page',
-		) );
+		$this->options_page = add_management_page(
+			$this->admin_title, $this->admin_title, 'manage_options', $this->admin_slug, array(
+				$this,
+				'do_page',
+			)
+		);
 
 		add_action( 'admin_head-' . $this->options_page, array( $this, 'js' ) );
 
@@ -142,7 +144,7 @@ class Taxonomy_Switcher_UI {
 							<label for="taxonomy-switcher-terms"><?php esc_html_e( 'Comma separated list of term ids to switch', 'wds' ); ?></label>
 						</th>
 						<td>
-							<input placeholder="1,2,13" class="regular-text" type="text" id="taxonomy-switcher-terms" name="terms" value="<?php echo isset( $_GET[ 'terms' ] ) ? esc_attr( $_GET[ 'terms' ] ) : ''; ?>">
+							<input placeholder="1,2,13" class="regular-text" type="text" id="taxonomy-switcher-terms" name="terms" value="<?php echo isset( $_GET['terms'] ) ? esc_attr( $_GET['terms'] ) : ''; ?>">
 						</td>
 					</tr>
 					<tr valign="top">
@@ -193,15 +195,15 @@ class Taxonomy_Switcher_UI {
 	public function ajax_term_results() {
 
 		// Verify our nonce, and required data.
-		if ( ! ( isset( $_REQUEST[ 'nonce' ], $_REQUEST[ 'search' ] ) && wp_verify_nonce( $_REQUEST[ 'nonce' ], __FILE__ ) ) ) {
+		if ( ! ( isset( $_REQUEST['nonce'], $_REQUEST['search'] ) && wp_verify_nonce( $_REQUEST['nonce'], __FILE__ ) ) ) {
 			$this->send_error( __LINE__, __( 'Security check failed', 'wds' ) );
 		}
 
 		// Set taxonomy.
-		$taxonomy = isset( $_REQUEST[ 'tax_name' ] ) ? $_REQUEST[ 'tax_name' ] : 'category';
+		$taxonomy = isset( $_REQUEST['tax_name'] ) ? $_REQUEST['tax_name'] : 'category';
 
 		// Sanitize our search string.
-		$search_string = sanitize_text_field( $_REQUEST[ 'search' ] );
+		$search_string = sanitize_text_field( $_REQUEST['search'] );
 
 		// No search string, bail.
 		if ( empty( $search_string ) ) {
@@ -252,11 +254,13 @@ class Taxonomy_Switcher_UI {
 
 		$msg = $msg ? $msg : __( 'No Results Found', 'wds' );
 
-		wp_send_json_error( array(
-			'html' => '<ul><li>' . $msg . '</li></ul>',
-			'line' => $line,
-			'$_REQUEST' => $_REQUEST,
-		) );
+		wp_send_json_error(
+			array(
+				'html'      => '<ul><li>' . $msg . '</li></ul>',
+				'line'      => $line,
+				'$_REQUEST' => $_REQUEST,
+			)
+		);
 
 	}
 
@@ -277,12 +281,14 @@ class Taxonomy_Switcher_UI {
 			add_filter( 'terms_clauses', array( $this, 'wilcard_term_name' ) );
 		}
 		// Do term search.
-		$terms = get_terms( $taxonomy, array(
-			'number'       => absint( $number ),
-			'name__like'   => $search_string,
-			'cache_domain' => 'taxonomy_switch_search2',
-			'get'          => 'all',
-		) );
+		$terms = get_terms(
+			$taxonomy, array(
+				'number'       => absint( $number ),
+				'name__like'   => $search_string,
+				'cache_domain' => 'taxonomy_switch_search2',
+				'get'          => 'all',
+			)
+		);
 
 		remove_filter( 'terms_clauses', array( $this, 'wilcard_term_name' ) );
 
@@ -305,10 +311,12 @@ class Taxonomy_Switcher_UI {
 
 		foreach ( $terms as $term ) {
 			// Check if this term has child terms.
-			$children = get_terms( $term->taxonomy, array(
-				'parent' => $term->term_id,
-				'hide_empty' => false,
-			) );
+			$children = get_terms(
+				$term->taxonomy, array(
+					'parent'     => $term->term_id,
+					'hide_empty' => false,
+				)
+			);
 
 			// If no child terms to convert, bail.
 			if ( ! $children ) {

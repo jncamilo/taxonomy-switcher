@@ -63,12 +63,14 @@ class Taxonomy_Switcher {
 	 */
 	public function __construct( $args = array() ) {
 
-		$args = wp_parse_args( $args, array(
-			'from_tax' => '',
-			'to_tax'   => '',
-			'parent'   => '',
-			'terms'    => '',
-		) );
+		$args = wp_parse_args(
+			$args, array(
+				'from_tax' => '',
+				'to_tax'   => '',
+				'parent'   => '',
+				'terms'    => '',
+			)
+		);
 
 		if ( ! $args['from_tax'] || ! $args['to_tax'] ) {
 			return;
@@ -154,10 +156,10 @@ class Taxonomy_Switcher {
 		}
 
 		$count          = $this->count();
-		$count_name     = sprintf( _n( '1 term', '%d terms', $count, 'wds' ), $count );
+		$count_name     = sprintf( _n( '%d term', '%d terms', $count, 'wds' ), $count );
 		$this->messages = array(
 			'no_terms'        => __( 'No terms to be switched. Check if the term exists in your "from" taxonomy.', 'wds' ),
-			'switching'       => sprintf( __( 'Switching %s with the taxonomy \'%s\' to the taxonomy \'%s\'', 'wds' ), $count_name, $this->from, $this->to ),
+			'switching'       => sprintf( __( 'Switching %1$s with the taxonomy \'%2$s\' to the taxonomy \'%3$s\'', 'wds' ), $count_name, $this->from, $this->to ),
 			'limit_by_parent' => sprintf( __( 'Limiting the switch by the parent term_id of %d', 'wds' ), $this->parent ),
 			'limit_by_terms'  => sprintf( __( 'Limiting the switch to these terms: %s', 'wds' ), implode( ', ', $this->terms ) ),
 			'switched'        => sprintf( __( 'Taxonomies switched for %s!', 'wds' ), $count_name ),
@@ -181,7 +183,12 @@ class Taxonomy_Switcher {
 			'include'    => $this->terms,
 		);
 
-		$args = apply_filters( 'taxonomy_switcher_get_terms_args', $args, $this->from, $this->to, array( 'parent' => $this->parent, 'terms' => $this->terms ) );
+		$args = apply_filters(
+			'taxonomy_switcher_get_terms_args', $args, $this->from, $this->to, array(
+				'parent' => $this->parent,
+				'terms'  => $this->terms,
+			)
+		);
 
 		$terms = get_terms( $this->from, $args );
 
@@ -234,18 +241,26 @@ class Taxonomy_Switcher {
 		$term_ids = array_map( 'absint', $this->term_ids );
 		$term_ids = implode( ', ', $term_ids );
 
-		$wpdb->query( $wpdb->prepare( "
+		$wpdb->query(
+			$wpdb->prepare(
+				"
 			UPDATE `{$wpdb->term_taxonomy}`
 			SET `taxonomy` = %s
 			WHERE `taxonomy` = %s AND `term_id` IN ( {$term_ids} )
-		", $this->to, $this->from ) );
+		", $this->to, $this->from
+			)
+		);
 
 		if ( 0 < $this->parent ) {
-			$wpdb->query( $wpdb->prepare( "
+			$wpdb->query(
+				$wpdb->prepare(
+					"
 				UPDATE `{$wpdb->term_taxonomy}`
 				SET `parent` = 0
 				WHERE `parent` = %d AND `term_id` IN ( {$term_ids} )
-			", $this->parent ) );
+			", $this->parent
+				)
+			);
 		}
 
 		return true;

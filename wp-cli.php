@@ -38,7 +38,7 @@ class Taxonomy_Switcher_Command extends WP_CLI_Command {
 	 */
 	public function convert( $args, $assoc_args ) {
 
-		$args = $this->map_arg_names( $assoc_args );
+		$args         = $this->map_arg_names( $assoc_args );
 		$tax_switcher = new Taxonomy_Switcher( $this->map_arg_names( $assoc_args ) );
 
 		$count = $tax_switcher->count();
@@ -74,14 +74,14 @@ class Taxonomy_Switcher_Command extends WP_CLI_Command {
 	 * @return array
 	 */
 	protected function map_arg_names( $args ) {
-		$tomap = array(
-			'to' => 'to_tax',
+		$tomap   = array(
+			'to'   => 'to_tax',
 			'from' => 'from_tax',
 		);
 		$newargs = array();
 		foreach ( $args as $key => $value ) {
 			if ( array_key_exists( $key, $tomap ) ) {
-		 		$newargs[ $tomap[ $key ] ] = $value;
+				$newargs[ $tomap[ $key ] ] = $value;
 			} else {
 				$newargs[ $key ] = $value;
 			}
